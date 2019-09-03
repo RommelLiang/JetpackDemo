@@ -9,6 +9,11 @@ import android.arch.lifecycle.ViewModel;
 
 import com.ramesses.jetpackdemo.bean.User;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+
 /**
  * Routing
  * Desc    TODO
@@ -18,24 +23,63 @@ import com.ramesses.jetpackdemo.bean.User;
  */
 public class UserViewModel extends ViewModel {
 
-    private MutableLiveData<User> mUserMutableLiveData;
-    private User mUser;
-    public UserViewModel(){
+    private MutableLiveData<User>    mUserMutableLiveData;
+    private MutableLiveData<Boolean> mBooleanMutableLiveData;
+    private User                     mUser;
+
+    public UserViewModel() {
+
         mUserMutableLiveData = new MutableLiveData<>();
+
+        mBooleanMutableLiveData = new MutableLiveData<>();
         mUser = new User();
     }
 
     public MutableLiveData<User> getUser() {
+
         mUser.setName("小狗");
         mUser.setAge(4);
         mUserMutableLiveData.setValue(mUser);
         return mUserMutableLiveData;
     }
 
-    public void updateUser(String name,int age) {
-        mUser.setName(name);
-        mUser.setAge(age);
-        mUserMutableLiveData.setValue(mUser);
+    public MutableLiveData<Boolean> getLoading() {
+
+        return mBooleanMutableLiveData;
+    }
+
+    public void updateUser(final String name, final int age) {
+
+        mBooleanMutableLiveData.setValue(true);
+        Observable.just(new User())
+                  .doOnNext(new Consumer<User>() {
+
+                      @Override
+                      public void accept(User user) throws Exception {
+
+                          user.setName(name);
+                          user.setAge(age);
+                      }
+                  })
+                  .flatMap(new Function<User, ObservableSource<?>>() {
+
+                      @Override
+                      public ObservableSource<?> apply(User user) throws Exception {
+
+                          return Observable.just(user);
+                      }
+                  })
+                  .subscribe(new Consumer<Object>() {
+
+                      @Override
+                      public void accept(Object o) throws Exception {
+
+                          mUser.setName(name);
+                          mUser.setAge(age);
+                          mUserMutableLiveData.setValue(mUser);
+                          mBooleanMutableLiveData.setValue(false);
+                      }
+                  });
     }
 
 }

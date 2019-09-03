@@ -8,6 +8,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ public class LiveDataActivity extends AppCompatActivity {
                 mAge.setText(user.getAge());
             }
         };
+
         mUserViewModle = ViewModelProviders.of(this).get(UserViewModel.class);
         mUserViewModle.getUser().observe(this,mUserObserver);
         mUserViewModle.updateUser("小猫",8);
