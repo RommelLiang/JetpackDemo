@@ -6,10 +6,15 @@ package com.ramesses.net;
 
 import android.arch.lifecycle.LiveData;
 
+import com.google.gson.Gson;
+
 import java.lang.reflect.Type;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import retrofit2.Call;
 import retrofit2.CallAdapter;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Routing
@@ -18,12 +23,16 @@ import retrofit2.CallAdapter;
  * Created by LWS on 2019-09-03 19:42
  * Version 1.0
  */
-public class LiveDataCallAdapter<T> implements CallAdapter<T, LiveData<BaseResponse<T>>> {
-    private Type responseType;
+public class LiveDataCallAdapter<T>
+        implements CallAdapter<BaseResponse, LiveData<BaseResponse<T>>> {
 
-    public LiveDataCallAdapter(Type responseType) {
+    private Type responseType;
+    private Gson mGson;
+
+    public LiveDataCallAdapter(Type responseType, Gson mGson) {
 
         this.responseType = responseType;
+        this.mGson = mGson;
     }
 
     @Override
@@ -33,8 +42,34 @@ public class LiveDataCallAdapter<T> implements CallAdapter<T, LiveData<BaseRespo
     }
 
     @Override
-    public LiveData<BaseResponse<T>> adapt(Call<T> call) {
+    public LiveData<BaseResponse<T>> adapt(final Call<BaseResponse> call) {
 
-        return null;
+        return new LiveData<BaseResponse<T>>() {
+
+            AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+
+            @Override
+            protected void onActive() {
+
+                super.onActive();
+                if (atomicBoolean.compareAndSet(false, true)) {
+                    call.enqueue(new Callback<BaseResponse>() {
+
+                        @Override
+                        public void onResponse(
+                                Call<BaseResponse> call, Response<BaseResponse> response) {
+
+                            postValue(ConvertFactory.convert(response, mGson));
+                        }
+
+                        @Override
+                        public void onFailure(Call<BaseResponse> call, Throwable t) {
+
+                            postValue(ConvertFactory.convertErroe(t));
+                        }
+                    });
+                }
+            }
+        };
     }
 }

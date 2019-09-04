@@ -6,6 +6,9 @@ package com.ramesses.net;
 
 import android.arch.lifecycle.LiveData;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -38,6 +41,7 @@ public class LiveDataCallAdapterFactory extends CallAdapter.Factory {
         if (!(parameterUpperBound instanceof ParameterizedType)){
             throw new IllegalArgumentException("资源必须为ParameterizedType");
         }
-        return new LiveDataCallAdapter(parameterUpperBound);
+        Gson gson = new GsonBuilder().create();
+        return new LiveDataCallAdapter(parameterUpperBound,gson);
     }
 }

@@ -10,10 +10,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.ramesses.jetpackdemo.R;
 import com.ramesses.jetpackdemo.bean.User;
+import com.ramesses.net.BaseResponse;
 
 public class LiveDataActivity extends AppCompatActivity {
 
@@ -29,17 +31,18 @@ public class LiveDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_live_data);
         mName = findViewById(R.id.tv_name);
         mAge = findViewById(R.id.tv_age);
-        mUserObserver = new Observer<User>() {
-            @Override
-            public void onChanged(@Nullable User user) {
-                mName.setText(user.getName());
-                mAge.setText(user.getAge());
-            }
-        };
+
 
         mUserViewModle = ViewModelProviders.of(this).get(UserViewModel.class);
-        mUserViewModle.getUser().observe(this,mUserObserver);
-        mUserViewModle.updateUser("小猫",8);
+        mUserViewModle.getUser().observe(this, new Observer<BaseResponse<User>>() {
+
+            @Override
+            public void onChanged(
+                    @Nullable BaseResponse<User> userBaseResponse) {
+
+                Log.e(userBaseResponse.toString(),"");
+            }
+        });
 
     }
 }

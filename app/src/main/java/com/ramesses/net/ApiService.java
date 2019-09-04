@@ -4,11 +4,18 @@
 
 package com.ramesses.net;
 
+import android.arch.lifecycle.LiveData;
+
+import com.ramesses.jetpackdemo.bean.User;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Field;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 /**
  * Routing
@@ -21,7 +28,7 @@ public class ApiService {
 
     private ApiManagerService mApiManagerService;
 
-    private final String ENDPOINT = "";
+    private final String ENDPOINT = "https://www.apiopen.top/";
     private static class StaticSingletonHolder {
 
         private static final ApiService instance = new ApiService();
@@ -40,13 +47,16 @@ public class ApiService {
         mApiManagerService = retrofit.create(ApiManagerService.class);
     }
 
-    public static ApiService getInstance() {
+    public static ApiManagerService getInstance() {
 
-        return StaticSingletonHolder.instance;
+        return StaticSingletonHolder.instance.mApiManagerService;
     }
 
-    interface ApiManagerService {
 
+    public interface ApiManagerService {
+        @GET("/login")
+        LiveData<BaseResponse<User>> login(@Query ("key") String key, @Query ("phone") String phone,
+                                           @Query ("passwd") String passwd);
     }
 
 }
