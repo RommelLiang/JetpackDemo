@@ -6,6 +6,7 @@ package com.ramesses.jetpackdemo.LiveData;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,31 +16,27 @@ import android.widget.TextView;
 
 import com.ramesses.jetpackdemo.R;
 import com.ramesses.jetpackdemo.bean.User;
+import com.ramesses.jetpackdemo.databinding.ActivityLiveDataBinding;
 import com.ramesses.net.BaseResponse;
 
 public class LiveDataActivity extends AppCompatActivity {
 
     private UserViewModel mUserViewModle;
-    private TextView      mName;
-    private TextView      mAge;
-    private Observer<User> mUserObserver;
-
+    private ActivityLiveDataBinding mBinding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_live_data);
-        mName = findViewById(R.id.tv_name);
-        mAge = findViewById(R.id.tv_age);
-
-
+        mBinding = DataBindingUtil.setContentView(this,R.layout.activity_live_data);
         mUserViewModle = ViewModelProviders.of(this).get(UserViewModel.class);
         mUserViewModle.getUser().observe(this, new Observer<BaseResponse<User>>() {
 
             @Override
             public void onChanged(
                     @Nullable BaseResponse<User> userBaseResponse) {
-
+                if (userBaseResponse.getCode() == 200) {
+                    mBinding.setUser(userBaseResponse.getData());
+                }
                 Log.e(userBaseResponse.toString(),"");
             }
         });

@@ -5,6 +5,11 @@
 apply plugin: 'com.android.application'
 
 android {
+
+    dataBinding {
+        //开启dataBinding
+        enabled = true
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.ramesses.jetpackdemo"
