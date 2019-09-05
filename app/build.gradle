@@ -21,6 +21,12 @@ android {
     }
     buildTypes {
         release {
+            buildConfigField "String", "MUSIC_API", music_api_key
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField "String", "MUSIC_API", music_api_key
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

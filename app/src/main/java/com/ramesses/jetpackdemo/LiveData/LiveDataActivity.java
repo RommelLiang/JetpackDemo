@@ -38,7 +38,6 @@ public class LiveDataActivity extends AppCompatActivity {
 
                 if (userBaseResponse.getCode() == 200) {
                     refreshUser(userBaseResponse.getData());
-                    
                 }
                 Log.e(userBaseResponse.toString(), "");
             }
