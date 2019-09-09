@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.ramesses.jetpackdemo.LiveData.LifecycleActivity;
 import com.ramesses.jetpackdemo.LiveData.LiveDataActivity;
 import com.ramesses.jetpackdemo.R;
 import com.ramesses.webView.WebViewActivity;
@@ -32,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, WebViewActivity.class));
+            }
+        });
+        findViewById(R.id.lifecycle).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, LifecycleActivity.class));
             }
         });
     }
