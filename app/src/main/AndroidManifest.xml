@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LiveData.LifecycleActivity"></activity>
+        <activity android:name=".rxjava.BackPressureActivity"></activity>
+        <activity android:name=".LiveData.LifecycleActivity"/>
         <activity android:name="com.ramesses.webView.WebViewActivity"/>
         <activity android:name=".LiveData.LiveDataActivity"/>
         <activity android:name="com.ramesses.MainActivity">
